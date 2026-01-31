@@ -3,33 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>売場 座席管理</title>
+  <title>座席管理</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin:0; background:#f7f7f7; }
-    header { padding:12px; text-align:center; font-weight:bold; background:#fff; }
-    #count { margin:8px 0; text-align:center; }
-    #map { position: relative; max-width: 420px; margin: 0 auto; background:#fff; }
-    .seat {
-      position: absolute;
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      color: #fff; display:flex; align-items:center; justify-content:center;
-      font-weight:bold; user-select:none;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #fff7cc;
+      text-align: center;
     }
-    .free { background:#2ecc71; }
-    .used { background:#e74c3c; }
-    button { display:block; margin:12px auto; padding:10px 16px; border:none; border-radius:8px; }
+    h1 {
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .seat {
+      padding: 18px 0;
+      border-radius: 8px;
+      background: #ffd966;
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+      border: 2px solid #e6b800;
+    }
+    .seat.used {
+      background: #ff7f7f;
+      border-color: #cc0000;
+      color: #fff;
+    }
+    .note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #666;
+    }
   </style>
 </head>
 <body>
-  <header>売場 座席管理</header>
-  <div id="count">着席数: 0 / 14</div>
-  <div id="map">
-    <img src="layout.png" style="width:100%; display:block;" />
-    <!-- 座席ボタンはJSで生成 -->
-  </div>
-  <button onclick="resetAll()">全席リセット</button>
+  <h1>売場 座席管理</h1>
 
-  <script type="module" src="app.js"></script>
+  <div class="layout" id="layout"></div>
+
+  <div class="note">
+    席をタップすると「空席 / 使用中」が切り替わります
+  </div>
+
+  <script>
+    const seats = [
+      "A1","A2","A3","A4","A5",
+      "A6","A7","A8","A9","A10",
+      "A11","A12","A13","B1","B2",
+      "B3","B4","B5","B6","B7"
+    ];
+
+    const layout = document.getElementById("layout");
+
+    seats.forEach(id => {
+      const div = document.createElement("div");
+      div.className = "seat";
+      div.textContent = id;
+
+      const key = "seat_" + id;
+      const saved = localStorage.getItem(key);
+      if (saved === "used") {
+        div.classList.add("used");
+      }
+
+      div.addEventListener("click", () => {
+        div.classList.toggle("used");
+        localStorage.setItem(key, div.classList.contains("used") ? "used" : "free");
+      });
+
+      layout.appendChild(div);
+    });
+  </script>
 </body>
 </html>
