@@ -3,34 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>座席管理</title>
+  <title>売場 座席管理</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
       margin: 0;
-      padding: 16px;
+      padding: 12px;
       background: #fff7cc;
       text-align: center;
     }
     h1 {
-      margin-bottom: 12px;
-      font-size: 20px;
+      margin: 8px 0 12px;
+      font-size: 18px;
     }
-    .layout {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
+    .map {
       max-width: 420px;
       margin: 0 auto;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .empty {
+      visibility: hidden;
     }
     .seat {
-      padding: 18px 0;
+      padding: 12px 0;
       border-radius: 8px;
       background: #ffd966;
+      border: 2px solid #e6b800;
+      font-weight: bold;
       cursor: pointer;
       user-select: none;
-      font-weight: bold;
-      border: 2px solid #e6b800;
+      font-size: 14px;
     }
     .seat.used {
       background: #ff7f7f;
@@ -38,7 +49,7 @@
       color: #fff;
     }
     .note {
-      margin-top: 12px;
+      margin-top: 8px;
       font-size: 12px;
       color: #666;
     }
@@ -47,39 +58,55 @@
 <body>
   <h1>売場 座席管理</h1>
 
-  <div class="layout" id="layout"></div>
+  <div class="map">
+    <!-- 上段 -->
+    <div class="row">
+      <div class="seat" data-id="A1">A1</div>
+      <div class="seat" data-id="A2">A2</div>
+      <div class="seat" data-id="A3">A3</div>
+      <div class="empty"></div>
+      <div class="seat" data-id="A4">A4</div>
+      <div class="seat" data-id="A5">A5</div>
+    </div>
+
+    <!-- 中段 -->
+    <div class="row">
+      <div class="seat" data-id="A6">A6</div>
+      <div class="seat" data-id="A7">A7</div>
+      <div class="empty"></div>
+      <div class="seat" data-id="A8">A8</div>
+      <div class="seat" data-id="A9">A9</div>
+      <div class="seat" data-id="A10">A10</div>
+    </div>
+
+    <!-- 下段 -->
+    <div class="row">
+      <div class="seat" data-id="A11">A11</div>
+      <div class="seat" data-id="A12">A12</div>
+      <div class="seat" data-id="A13">A13</div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+    </div>
+  </div>
 
   <div class="note">
     席をタップすると「空席 / 使用中」が切り替わります
   </div>
 
   <script>
-    const seats = [
-      "A1","A2","A3","A4","A5",
-      "A6","A7","A8","A9","A10",
-      "A11","A12","A13","B1","B2",
-      "B3","B4","B5","B6","B7"
-    ];
-
-    const layout = document.getElementById("layout");
-
-    seats.forEach(id => {
-      const div = document.createElement("div");
-      div.className = "seat";
-      div.textContent = id;
-
+    document.querySelectorAll(".seat").forEach(seat => {
+      const id = seat.dataset.id;
       const key = "seat_" + id;
-      const saved = localStorage.getItem(key);
-      if (saved === "used") {
-        div.classList.add("used");
+
+      if (localStorage.getItem(key) === "used") {
+        seat.classList.add("used");
       }
 
-      div.addEventListener("click", () => {
-        div.classList.toggle("used");
-        localStorage.setItem(key, div.classList.contains("used") ? "used" : "free");
+      seat.addEventListener("click", () => {
+        seat.classList.toggle("used");
+        localStorage.setItem(key, seat.classList.contains("used") ? "used" : "free");
       });
-
-      layout.appendChild(div);
     });
   </script>
 </body>
