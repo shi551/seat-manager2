@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>売場 座席管理</title>
+  <title>売場 座席管理（共有）</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
@@ -12,29 +12,16 @@
       background: #fff7cc;
       text-align: center;
     }
-    h1 {
-      margin: 8px 0 12px;
-      font-size: 18px;
-    }
-    .map {
+    h1 { font-size: 18px; margin: 8px 0 12px; }
+    .layout {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
       max-width: 420px;
       margin: 0 auto;
-      background: #ffffff;
-      padding: 10px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .row {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .empty {
-      visibility: hidden;
     }
     .seat {
-      padding: 12px 0;
+      padding: 14px 0;
       border-radius: 8px;
       background: #ffd966;
       border: 2px solid #e6b800;
@@ -48,64 +35,62 @@
       border-color: #cc0000;
       color: #fff;
     }
-    .note {
-      margin-top: 8px;
-      font-size: 12px;
-      color: #666;
-    }
+    .note { margin-top: 8px; font-size: 12px; color: #666; }
   </style>
 </head>
 <body>
-  <h1>売場 座席管理</h1>
+  <h1>売場 座席管理（共有）</h1>
 
-  <div class="map">
-    <!-- 上段 -->
-    <div class="row">
-      <div class="seat" data-id="A1">A1</div>
-      <div class="seat" data-id="A2">A2</div>
-      <div class="seat" data-id="A3">A3</div>
-      <div class="empty"></div>
-      <div class="seat" data-id="A4">A4</div>
-      <div class="seat" data-id="A5">A5</div>
-    </div>
+  <div class="layout" id="layout"></div>
 
-    <!-- 中段 -->
-    <div class="row">
-      <div class="seat" data-id="A6">A6</div>
-      <div class="seat" data-id="A7">A7</div>
-      <div class="empty"></div>
-      <div class="seat" data-id="A8">A8</div>
-      <div class="seat" data-id="A9">A9</div>
-      <div class="seat" data-id="A10">A10</div>
-    </div>
+  <div class="note">席をタップすると全員の画面に反映されます</div>
 
-    <!-- 下段 -->
-    <div class="row">
-      <div class="seat" data-id="A11">A11</div>
-      <div class="seat" data-id="A12">A12</div>
-      <div class="seat" data-id="A13">A13</div>
-      <div class="empty"></div>
-      <div class="empty"></div>
-      <div class="empty"></div>
-    </div>
-  </div>
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  <div class="note">
-    席をタップすると「空席 / 使用中」が切り替わります
-  </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBw_IzudCha13HNMWf07jRtCQSMZWJHVYg",
+      authDomain: "seat-cd1ad.firebaseapp.com",
+      projectId: "seat-cd1ad",
+      storageBucket: "seat-cd1ad.firebasestorage.app",
+      messagingSenderId: "115106177650",
+      appId: "1:115106177650:web:0d31169041b52d5d1f98eb"
+    };
 
-  <script>
-    document.querySelectorAll(".seat").forEach(seat => {
-      const id = seat.dataset.id;
-      const key = "seat_" + id;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-      if (localStorage.getItem(key) === "used") {
-        seat.classList.add("used");
-      }
+    const seats = [
+      "A1","A2","A3","A4","A5",
+      "A6","A7","A8","A9","A10",
+      "A11","A12","A13"
+    ];
 
-      seat.addEventListener("click", () => {
-        seat.classList.toggle("used");
-        localStorage.setItem(key, seat.classList.contains("used") ? "used" : "free");
+    const layout = document.getElementById("layout");
+
+    seats.forEach(id => {
+      const div = document.createElement("div");
+      div.className = "seat";
+      div.textContent = id;
+      layout.appendChild(div);
+
+      const ref = doc(db, "seats", id);
+
+      // リアルタイム反映
+      onSnapshot(ref, (snap) => {
+        if (snap.exists() && snap.data().used) {
+          div.classList.add("used");
+        } else {
+          div.classList.remove("used");
+        }
+      });
+
+      // タップで切り替え
+      div.addEventListener("click", async () => {
+        const used = div.classList.contains("used");
+        await setDoc(ref, { used: !used });
       });
     });
   </script>
