@@ -6,46 +6,81 @@
   <title>売場 座席管理（共有）</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
       margin: 0;
-      padding: 12px;
-      background: #fff7cc;
-      text-align: center;
+      background: #ffffff;
     }
-    h1 { font-size: 18px; margin: 8px 0 12px; }
-    .layout {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      max-width: 420px;
-      margin: 0 auto;
+    .stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: #fff;
+    }
+    .bg {
+      position: absolute;
+      inset: 0;
+      background: url("YOUR_IMAGE_URL_HERE") no-repeat center / contain;
+      opacity: 1;
     }
     .seat {
-      padding: 14px 0;
-      border-radius: 8px;
-      background: #ffd966;
-      border: 2px solid #e6b800;
+      position: absolute;
+      background: rgba(255, 235, 59, 0.95);
+      border: 2px solid #d4b400;
+      border-radius: 12px;
+      text-align: center;
       font-weight: bold;
-      cursor: pointer;
       user-select: none;
-      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .seat.used {
-      background: #ff7f7f;
-      border-color: #cc0000;
+      background: rgba(244, 67, 54, 0.95);
+      border-color: #b71c1c;
       color: #fff;
     }
-    .note { margin-top: 8px; font-size: 12px; color: #666; }
+
+    /* 座席位置（画像に合わせて配置） */
+    .s1 { left: 86%; top: 18%; width: 12%; height: 8%; }
+    .s2 { left: 86%; top: 34%; width: 12%; height: 8%; }
+    .s3 { left: 62%; top: 18%; width: 12%; height: 8%; }
+    .s4 { left: 38%; top: 14%; width: 12%; height: 8%; }
+    .s5 { left: 18%; top: 20%; width: 12%; height: 8%; }
+    .s6 { left: 18%; top: 30%; width: 12%; height: 8%; }
+
+    .s7  { left: 48%; top: 44%; width: 22%; height: 8%; }
+    .s10 { left: 30%; top: 44%; width: 10%; height: 8%; }
+
+    .s11 { left: 30%; top: 56%; width: 10%; height: 10%; }
+    .s12 { left: 30%; top: 70%; width: 10%; height: 10%; }
+    .s13 { left: 30%; top: 84%; width: 10%; height: 10%; }
+
+    .s8  { left: 64%; top: 62%; width: 12%; height: 14%; }
+    .s9  { left: 64%; top: 80%; width: 12%; height: 14%; }
   </style>
 </head>
 <body>
-  <h1>売場 座席管理（共有）</h1>
+  <div class="stage">
+    <div class="bg"></div>
 
-  <div class="layout" id="layout"></div>
+    <div class="seat s1"  data-id="1">1</div>
+    <div class="seat s2"  data-id="2">2</div>
+    <div class="seat s3"  data-id="3">3</div>
+    <div class="seat s4"  data-id="4">4</div>
+    <div class="seat s5"  data-id="5">5</div>
+    <div class="seat s6"  data-id="6">6</div>
 
-  <div class="note">席をタップすると全員の画面に反映されます</div>
+    <div class="seat s7"  data-id="7">7</div>
+    <div class="seat s10" data-id="10">10</div>
 
-  <!-- Firebase SDK -->
+    <div class="seat s11" data-id="11">11</div>
+    <div class="seat s12" data-id="12">12</div>
+    <div class="seat s13" data-id="13">13</div>
+
+    <div class="seat s8"  data-id="8">8</div>
+    <div class="seat s9"  data-id="9">9</div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -62,38 +97,25 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const seats = [
-      "A1","A2","A3","A4","A5",
-      "A6","A7","A8","A9","A10",
-      "A11","A12","A13"
-    ];
-
-    const layout = document.getElementById("layout");
-
-    seats.forEach(id => {
-      const div = document.createElement("div");
-      div.className = "seat";
-      div.textContent = id;
-      layout.appendChild(div);
-
+    document.querySelectorAll(".seat").forEach(seat => {
+      const id = seat.dataset.id;
       const ref = doc(db, "seats", id);
 
-      // リアルタイム反映
-      onSnapshot(ref, (snap) => {
+      onSnapshot(ref, snap => {
         if (snap.exists() && snap.data().used) {
-          div.classList.add("used");
+          seat.classList.add("used");
         } else {
-          div.classList.remove("used");
+          seat.classList.remove("used");
         }
       });
 
-      // タップで切り替え
-      div.addEventListener("click", async () => {
-        const used = div.classList.contains("used");
+      seat.addEventListener("click", async () => {
+        const used = seat.classList.contains("used");
         await setDoc(ref, { used: !used });
       });
     });
   </script>
 </body>
 </html>
+
 
