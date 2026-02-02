@@ -1,0 +1,45 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #eee;
+}
+
+#container {
+  position: relative;
+  width: 960px;
+  height: 720px;
+  margin: 0 auto;
+  background: #fff;
+}
+
+#layout {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 960px;
+  height: 720px;
+}
+
+.seat {
+  position: absolute;
+  width: 80px;
+  height: 60px;
+  background: #ffeb3b;
+  border: 3px solid #d4c200;
+  border-radius: 12px;
+  text-align: center;
+  line-height: 60px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+.seat.wide {
+  width: 160px;
+}
+
+.seat.tall {
+  height: 120px;
+  line-height: 120px;
+}
