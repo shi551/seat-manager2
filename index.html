@@ -6,27 +6,40 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <!-- 背景図面 -->
-    <img src="レイアウト.png" class="bg">
+  <div class="wrapper">
+    <div class="container" id="container">
+      <img src="レイアウト.png" class="bg">
 
-    <!-- 座席（1〜13） -->
-    <div class="seat s1">1</div>
-    <div class="seat s2">2</div>
-    <div class="seat s3">3</div>
-    <div class="seat s4">4</div>
-    <div class="seat s5">5</div>
-    <div class="seat s6">6</div>
-    <div class="seat s7">7</div>
-    <div class="seat s8">8</div>
-    <div class="seat s9">9</div>
-    <div class="seat s10">10</div>
-    <div class="seat s11">11</div>
-    <div class="seat s12">12</div>
-    <div class="seat s13">13</div>
+      <div class="seat s1">1</div>
+      <div class="seat s2">2</div>
+      <div class="seat s3">3</div>
+      <div class="seat s4">4</div>
+      <div class="seat s5">5</div>
+      <div class="seat s6">6</div>
+      <div class="seat s7">7</div>
+      <div class="seat s8">8</div>
+      <div class="seat s9">9</div>
+      <div class="seat s10">10</div>
+      <div class="seat s11">11</div>
+      <div class="seat s12">12</div>
+      <div class="seat s13">13</div>
+    </div>
   </div>
+
+  <script>
+    function resizeLayout() {
+      const baseWidth = 960;
+      const screenWidth = window.innerWidth;
+      const scale = screenWidth / baseWidth;
+      document.getElementById("container").style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener("resize", resizeLayout);
+    resizeLayout();
+  </script>
 </body>
 </html>
+
 
 
 
