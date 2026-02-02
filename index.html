@@ -2,121 +2,37 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>売場 座席管理（共有）</title>
-  <style>
-    body {
-      margin: 0;
-      background: #ffffff;
-    }
-    .stage {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      background: #fff;
-    }
-    .bg {
-      position: absolute;
-      inset: 0;
-      background: url(https://raw.githubusercontent.com/shi551/layout/main/%E3%83%AC%E3%82%A4%E3%82%A2%E3%82%A6%E3%83%88.png) no-repeat center / contain;
-      opacity: 1;
-    }
-    .seat {
-      position: absolute;
-      background: rgba(255, 235, 59, 0.95);
-      border: 2px solid #d4b400;
-      border-radius: 12px;
-      text-align: center;
-      font-weight: bold;
-      user-select: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .seat.used {
-      background: rgba(244, 67, 54, 0.95);
-      border-color: #b71c1c;
-      color: #fff;
-    }
-
-    /* 座席位置（画像に合わせて配置） */
-    .s1 { left: 86%; top: 18%; width: 12%; height: 8%; }
-    .s2 { left: 86%; top: 34%; width: 12%; height: 8%; }
-    .s3 { left: 62%; top: 18%; width: 12%; height: 8%; }
-    .s4 { left: 38%; top: 14%; width: 12%; height: 8%; }
-    .s5 { left: 18%; top: 20%; width: 12%; height: 8%; }
-    .s6 { left: 18%; top: 30%; width: 12%; height: 8%; }
-
-    .s7  { left: 48%; top: 44%; width: 22%; height: 8%; }
-    .s10 { left: 30%; top: 44%; width: 10%; height: 8%; }
-
-    .s11 { left: 30%; top: 56%; width: 10%; height: 10%; }
-    .s12 { left: 30%; top: 70%; width: 10%; height: 10%; }
-    .s13 { left: 30%; top: 84%; width: 10%; height: 10%; }
-
-    .s8  { left: 64%; top: 62%; width: 12%; height: 14%; }
-    .s9  { left: 64%; top: 80%; width: 12%; height: 14%; }
-  </style>
+  <meta name="viewport" content="width=960, initial-scale=1.0" />
+  <title>売場 座席管理</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="stage">
-    <div class="bg"></div>
+  <div id="container">
+    <img src="レイアウト.png" id="layout" />
 
-    <div class="seat s1"  data-id="1">1</div>
-    <div class="seat s2"  data-id="2">2</div>
-    <div class="seat s3"  data-id="3">3</div>
-    <div class="seat s4"  data-id="4">4</div>
-    <div class="seat s5"  data-id="5">5</div>
-    <div class="seat s6"  data-id="6">6</div>
+    <!-- 座席 -->
+    <div class="seat" style="left: 720px; top: 150px;">1</div>
+    <div class="seat" style="left: 720px; top: 250px;">2</div>
 
-    <div class="seat s7"  data-id="7">7</div>
-    <div class="seat s10" data-id="10">10</div>
+    <div class="seat" style="left: 520px; top: 150px;">3</div>
+    <div class="seat" style="left: 380px; top: 120px;">4</div>
 
-    <div class="seat s11" data-id="11">11</div>
-    <div class="seat s12" data-id="12">12</div>
-    <div class="seat s13" data-id="13">13</div>
+    <div class="seat" style="left: 200px; top: 150px;">5</div>
+    <div class="seat" style="left: 200px; top: 240px;">6</div>
 
-    <div class="seat s8"  data-id="8">8</div>
-    <div class="seat s9"  data-id="9">9</div>
+    <div class="seat wide" style="left: 360px; top: 350px;">7</div>
+
+    <div class="seat tall" style="left: 520px; top: 420px;">8</div>
+    <div class="seat tall" style="left: 520px; top: 540px;">9</div>
+
+    <div class="seat" style="left: 260px; top: 350px;">10</div>
+    <div class="seat" style="left: 260px; top: 430px;">11</div>
+    <div class="seat" style="left: 260px; top: 510px;">12</div>
+    <div class="seat" style="left: 260px; top: 590px;">13</div>
   </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBw_IzudCha13HNMWf07jRtCQSMZWJHVYg",
-      authDomain: "seat-cd1ad.firebaseapp.com",
-      projectId: "seat-cd1ad",
-      storageBucket: "seat-cd1ad.firebasestorage.app",
-      messagingSenderId: "115106177650",
-      appId: "1:115106177650:web:0d31169041b52d5d1f98eb"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    document.querySelectorAll(".seat").forEach(seat => {
-      const id = seat.dataset.id;
-      const ref = doc(db, "seats", id);
-
-      onSnapshot(ref, snap => {
-        if (snap.exists() && snap.data().used) {
-          seat.classList.add("used");
-        } else {
-          seat.classList.remove("used");
-        }
-      });
-
-      seat.addEventListener("click", async () => {
-        const used = seat.classList.contains("used");
-        await setDoc(ref, { used: !used });
-      });
-    });
-  </script>
 </body>
 </html>
+
 
 
 
