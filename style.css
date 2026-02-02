@@ -43,3 +43,8 @@ body {
   height: 120px;
   line-height: 120px;
 }
+
+.seat.tall {
+  height: 120px;
+  line-height: 120px;
+}
