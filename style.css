@@ -4,14 +4,12 @@ body {
   background: #f5f5f5;
 }
 
-/* 画面中央に配置 */
 .wrapper {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-/* 元サイズ（960×720）を維持 */
 .container {
   position: relative;
   width: 960px;
@@ -19,7 +17,6 @@ body {
   transform-origin: top left;
 }
 
-/* 背景画像 */
 .bg {
   position: absolute;
   top: 0;
@@ -28,7 +25,6 @@ body {
   height: 720px;
 }
 
-/* 座席 */
 .seat {
   position: absolute;
   width: 60px;
@@ -41,7 +37,7 @@ body {
   font-weight: bold;
 }
 
-/* 座標（今のままでOK。ズレは倍率で補正） */
+/* 座席の位置（今までのままでOK） */
 .s1  { top: 120px; left: 820px; }
 .s2  { top: 200px; left: 820px; }
 .s3  { top: 120px; left: 660px; }
@@ -58,39 +54,3 @@ body {
 .s11 { top: 380px; left: 380px; }
 .s12 { top: 460px; left: 380px; }
 .s13 { top: 540px; left: 380px; }
-
-/* 座席共通デザイン */
-.seat {
-  position: absolute;
-  width: 60px;
-  height: 40px;
-  background: rgba(255, 255, 0, 0.8);
-  border: 2px solid #333;
-  border-radius: 10px;
-  text-align: center;
-  line-height: 40px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* ===== 座標（※あとで微調整）===== */
-.s1  { top: 120px; left: 820px; }
-.s2  { top: 200px; left: 820px; }
-.s3  { top: 120px; left: 660px; }
-.s4  { top: 80px;  left: 480px; }
-.s5  { top: 140px; left: 300px; }
-.s6  { top: 200px; left: 300px; }
-
-.s7  { top: 300px; left: 520px; }
-
-.s8  { top: 430px; left: 610px; }
-.s9  { top: 520px; left: 610px; }
-
-.s10 { top: 300px; left: 380px; }
-.s11 { top: 380px; left: 380px; }
-.s12 { top: 460px; left: 380px; }
-.s13 { top: 540px; left: 380px; }
-.seat.tall {
-  height: 120px;
-  line-height: 120px;
-}
