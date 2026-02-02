@@ -2,11 +2,13 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>座席管理</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="wrapper">
+    <!-- ★ここが超重要：id="container" -->
     <div class="container" id="container">
       <img src="レイアウト.png" class="bg">
 
@@ -26,6 +28,7 @@
     </div>
   </div>
 
+  <!-- ★ここが超重要：この script を body の一番下に -->
   <script>
     function resizeLayout() {
       const baseWidth = 960;
@@ -39,9 +42,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
